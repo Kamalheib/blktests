@@ -579,7 +579,9 @@ configure_null_blk() {
 }
 
 setup_rdma() {
-	start_soft_rdma
+	if [ -z "$use_hw" ]; then
+		start_soft_rdma
+	fi
 	(
 		echo "RDMA interfaces:"
 		cd /sys/class/infiniband &&
@@ -598,7 +600,9 @@ teardown_uncond() {
 	killall -9 multipathd >&/dev/null
 	rm -f /etc/multipath.conf
 	stop_target
-	stop_soft_rdma
+	if [ -z "$use_hw" ]; then
+		stop_soft_rdma
+	fi
 	_exit_null_blk
 }
 
